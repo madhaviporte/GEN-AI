@@ -18,4 +18,17 @@ authRouter.post("/register", authController.registerUserController)
  */
 authRouter.post('/login', authController.loginUserController)
 
+
+/**
+ * @routes GET /api/auth/loginUserController
+ * @description clear token from user cookie and add the token in blacklistToken
+ * @access Public
+ */
+authRouter.get('/logout',authController.logoutUserController)
+
+
+/**
+ * 
+ */
+
 module.exports = authRouter
