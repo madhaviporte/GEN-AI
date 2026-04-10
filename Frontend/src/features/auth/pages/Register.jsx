@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {useNavigate,Link} from 'react-router'
 
 const Register = () => {
 
   const navigate = useNavigate()
+  const[username,setUsername]=useState("")
+  const[email,setEmail]=useState("")
+  const[password,setPassword]=useState("")
 
 const handleSubmit = (e) =>{
   e.preventDefault()
@@ -18,7 +21,9 @@ const handleSubmit = (e) =>{
 
           <div className="input-group">
             <label htmlFor="username">Username</label>
-            <input type="text" id='username' name='username' placeholder='Enter username' />
+            <input 
+            onChange={{}}
+            type="text" id='username' name='username' placeholder='Enter username' />
           </div>
 
           <div className="input-group">
