@@ -1,1 +1,26 @@
 login krne ke bad user resume or targated job description ko uupload kr skta hai hmara system dono chizo ko compair krega or anylyse krega ki job ke liye fit hai ya nahi ye resumne ats frindly hai ya nhai sara kuchh dekhega fir ush job se related 1)relevant 2)technical 3)behavioural question gernate krega or prepration plane generate krega jo us job ko target krega or agr user chahe to apne liye resume generate kr skt hia jo ats frindly hoga
+
+how to build a Production-Ready Full Stack Gen AI Job Preparation Web Application in One Shot — from authentication and resume processing to AI-powered interview preparation using React, Node.js, JWT, Gemini AI, and Puppeteer.
+
+This project is designed to simulate a real-world product where users can upload their resumes, analyze job descriptions, detect skill gaps, and generate AI-powered interview questions and ATS-optimized resumes.
+If you want to master Full Stack + Gen AI by building a real-world application, this complete project walkthrough is for you.
+
+🛠 Tech Stack Used
+
+Frontend: React.js
+Backend: Node.js + Express.js
+Authentication: JWT + Token Blacklisting
+AI: Gemini API
+PDF Generation: Puppeteer
+
+🚀 What You Will Learn
+
+Full Stack Web Application Architecture
+Secure Authentication using JWT
+Token Blacklisting Implementation
+AI Integration using Gemini
+Resume Parsing & Skill Extraction Logic
+AI-Based Skill Gap Detection
+ATS-Optimized Resume Generation
+Puppeteer for Dynamic PDF Creation
+Real-World Project Structuring
