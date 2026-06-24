@@ -32,6 +32,7 @@ export const useInterview = () => {
 
     const getReportById = async (interviewId) => {
         setLoading(true)
+
         let response = null
         try {
             response = await getInterviewReportById(interviewId)
@@ -41,7 +42,11 @@ export const useInterview = () => {
         } finally {
             setLoading(false)
         }
-        return response.interviewReport
+       if (!response) {
+    return null;
+}
+
+return response.interviewReport;
     }
 
     const getReports = async () => {

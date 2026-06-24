@@ -25,6 +25,7 @@ async function generateInterViewReportController(req, res) {
         selfDescription,
         jobDescription,
         ...interViewReportByAi
+
     })
 
     res.status(201).json({

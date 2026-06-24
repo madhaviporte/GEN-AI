@@ -3,11 +3,15 @@ import "../style/home.scss"
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate } from 'react-router'
 
+
 const Home = () => {
 
     const { loading, generateReport,reports } = useInterview()
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
+
+    const [resumeName, setResumeName] = useState("")
+
     const resumeInputRef = useRef()
 
     const navigate = useNavigate()
@@ -81,8 +85,24 @@ const Home = () => {
                                 </span>
                                 <p className='dropzone__title'>Click to upload or drag &amp; drop</p>
                                 <p className='dropzone__subtitle'>PDF or DOCX (Max 5MB)</p>
-                                <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,.docx' />
+                                <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,.docx'
+                                 onChange={(e) => {
+            if (e.target.files.length > 0) {
+                setResumeName(e.target.files[0].name)
+            }
+        }} />
                             </label>
+          {resumeName && (
+    <p
+        style={{
+            marginTop: "10px",
+            color: "#4CAF50",
+            fontWeight: "600"
+        }}
+    >
+        ✓ Selected: {resumeName}
+    </p>
+)}                  
                         </div>
 
                         {/* OR Divider */}
