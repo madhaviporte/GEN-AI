@@ -3,13 +3,6 @@ const authMiddleware = require("../middlewares/auth.middleware")
 const interviewController = require("../controllers/interview.controller")
 const upload = require("../middlewares/file.middleware")
 
-console.log("authUser:", typeof authMiddleware.authUser);
-console.log("upload:", upload);
-console.log(
-  "generateInterViewReportController:",
-  typeof interviewController.generateInterViewReportController
-);
-
 const interviewRouter = express.Router()
 
 

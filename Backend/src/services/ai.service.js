@@ -41,41 +41,16 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
                         Job Description: ${jobDescription}
 `
 
-    let response;
-
-try {
-    response = await ai.models.generateContent({
+    const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: prompt,
         config: {
             responseMimeType: "application/json",
             responseSchema: zodToJsonSchema(interviewReportSchema),
         }
-    });
-} catch (error) {
-    console.error("Gemini Error:", error);
+    })
 
-    if (error?.status === 503 || error?.message?.includes("high demand")) {
-        throw new Error("AI service is temporarily unavailable. Please try again in a few seconds.");
-    }
-
-    throw error;
-}
-
-const text =
-    response?.text ||
-    response?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-if (!text) {
-    throw new Error("Empty response from AI");
-}
-
-try {
-    return JSON.parse(text);
-} catch (err) {
-    console.error("Invalid JSON:", text);
-    throw new Error("Failed to parse AI response");
-}
+    return JSON.parse(response.text)
 
 
 }
@@ -130,28 +105,11 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
     })
 
 
-   const text =
-    response?.text ||
-    response?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const jsonContent = JSON.parse(response.text)
 
-if (!text) {
-    throw new Error("Empty response from AI");
-}
+    const pdfBuffer = await generatePdfFromHtml(jsonContent.html)
 
-let jsonContent;
-
-try {
-    jsonContent = JSON.parse(text);
-} catch (err) {
-    console.error("Invalid JSON:", text);
-    throw new Error("Failed to parse AI response");
-}
-
-if (!jsonContent?.html) {
-    throw new Error("HTML not generated");
-}
-
-return await generatePdfFromHtml(jsonContent.html);
+    return pdfBuffer
 
 }
 
