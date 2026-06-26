@@ -6,6 +6,7 @@ const puppeteer = require("puppeteer")
 const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY
 })
+console.log("KEY:", process.env.GOOGLE_GENAI_API_KEY.substring(0, 15));
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -161,7 +162,7 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     while (retries >= 0) {
         try {
             const response = await ai.models.generateContent({
-                model: "gemini-2.0-flash-lite", 
+                model: "gemini-2.5-flash", 
                 contents: prompt,
                 config: {
                     responseMimeType: "application/json",
@@ -199,6 +200,7 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
                 delay *= 2;
                 continue;
             }
+
 
             console.error(`[AI SERVICE] Terminal Error (Status: ${statusCode}):`, err.message || err);
             
@@ -253,7 +255,7 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                     `
 
     const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash-lite",
+        model: "gemini-2.5-flash",
         contents: prompt,
         config: {
             responseMimeType: "application/json",

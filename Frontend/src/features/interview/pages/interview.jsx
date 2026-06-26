@@ -6,22 +6,34 @@ import { useNavigate, useParams } from 'react-router'
 
 
 const NAV_ITEMS = [
-    { id: 'technical', label: 'Technical Questions', icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-        </svg>
-    ) },
-    { id: 'behavioral', label: 'Behavioral Questions', icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-    ) },
-    { id: 'roadmap', label: 'Road Map', icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 18l6-6-6-6" />
-            <path d="M3 18l6-6-6-6" />
-        </svg>
-    ) },
+    { 
+        id: 'technical', 
+        label: 'Technical Questions', 
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+            </svg>
+        )
+    },
+    { 
+        id: 'behavioral', 
+        label: 'Behavioral Questions', 
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+        )
+    },
+    { 
+        id: 'roadmap', 
+        label: 'Road Map', 
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 7l6-6 6 6 6-6v15l-6 6-6-6-6 6V7z" />
+            </svg>
+        )
+    },
 ]
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -33,7 +45,7 @@ const QuestionCard = ({ item, index }) => {
                 <span className='q-card__index'>Q{index + 1}</span>
                 <p className='q-card__question'>{item.question}</p>
                 <span className={`q-card__chevron ${open ? 'q-card__chevron--open' : ''}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
                 </span>
             </div>
             {open && (
@@ -60,10 +72,7 @@ const RoadMapDay = ({ day }) => (
         </div>
         <ul className='roadmap-day__tasks'>
             {day.tasks?.map((task, i) => (
-                <li key={i}>
-                    <span className='roadmap-day__bullet' />
-                    {task}
-                </li>
+                <li key={i}>{task}</li>
             ))}
         </ul>
     </div>
@@ -102,38 +111,28 @@ const Interview = () => {
 
                 {/* ── Left Nav ── */}
                 <nav className='interview-nav'>
-                    <div className="nav-content">
-                        <div className='nav-brand'>
-                            <span className="brand-dot" />
-                            <p className='interview-nav__label'>Sections</p>
-                        </div>
-                        <div className="nav-links">
-                            {NAV_ITEMS.map(item => (
-                                <button
-                                    key={item.id}
-                                    className={`interview-nav__item ${activeNav === item.id ? 'interview-nav__item--active' : ''}`}
-                                    onClick={() => setActiveNav(item.id)}
-                                >
-                                    <span className='interview-nav__icon'>{item.icon}</span>
-                                    {item.label}
-                                </button>
-                            ))}
-                        </div>
+                    <p className='sidebar-label'>Sections</p>
+                    <div className="nav-links">
+                        {NAV_ITEMS.map(item => (
+                            <button
+                                key={item.id}
+                                className={`interview-nav__item ${activeNav === item.id ? 'interview-nav__item--active' : ''}`}
+                                onClick={() => setActiveNav(item.id)}
+                            >
+                                {item.icon}
+                                {item.label}
+                            </button>
+                        ))}
                     </div>
                 </nav>
-
-                <div className='vertical-divider' />
 
                 {/* ── Center Content ── */}
                 <main className='interview-content'>
                     {activeNav === 'technical' && (
                         <section className="fade-in">
                             <div className='content-header'>
-                                <div>
-                                    <h2>Technical Questions</h2>
-                                    <p className='content-subtitle'>Deep dive into your technical expertise</p>
-                                </div>
-                                <span className='content-header__count'>{report.technicalQuestions?.length || 0}</span>
+                                <h2>Technical Questions</h2>
+                                <span className='content-header__badge'>{report.technicalQuestions?.length || 0} questions</span>
                             </div>
                             <div className='q-list'>
                                 {report.technicalQuestions?.map((q, i) => (
@@ -146,11 +145,8 @@ const Interview = () => {
                     {activeNav === 'behavioral' && (
                         <section className="fade-in">
                             <div className='content-header'>
-                                <div>
-                                    <h2>Behavioral Questions</h2>
-                                    <p className='content-subtitle'>Assessing soft skills and professional conduct</p>
-                                </div>
-                                <span className='content-header__count'>{report.behavioralQuestions?.length || 0}</span>
+                                <h2>Behavioral Questions</h2>
+                                <span className='content-header__badge'>{report.behavioralQuestions?.length || 0} questions</span>
                             </div>
                             <div className='q-list'>
                                 {report.behavioralQuestions?.map((q, i) => (
@@ -163,10 +159,8 @@ const Interview = () => {
                     {activeNav === 'roadmap' && (
                         <section className="fade-in">
                             <div className='content-header'>
-                                <div>
-                                    <h2>Preparation Road Map</h2>
-                                    <p className='content-subtitle'>A structured {report.preparationPlan?.length || 7}-day learning path</p>
-                                </div>
+                                <h2>Preparation Road Map</h2>
+                                <p className='content-subtitle'>Structured path for {report.preparationPlan?.length || 7} days</p>
                             </div>
                             <div className='roadmap-list'>
                                 {report.preparationPlan?.map((day) => (
@@ -177,53 +171,48 @@ const Interview = () => {
                     )}
                 </main>
 
-                <div className='vertical-divider' />
-
                 {/* ── Right Sidebar ── */}
                 <aside className='interview-sidebar'>
+                    
                     <div className="sidebar-section">
                         <p className='sidebar-label'>Match Score</p>
-                        <div className="match-score-container">
-                            <svg className="score-ring" viewBox="0 0 100 100">
-                                <circle className="score-ring-bg" cx="50" cy="50" r="45" />
-                                <circle 
-                                    className={`score-ring-fill ${scoreColor}`} 
-                                    cx="50" cy="50" r="45" 
-                                    strokeDasharray={`${(report.matchScore / 100) * 283} 283`}
-                                />
-                            </svg>
-                            <div className="score-text">
-                                <span className='score-value'>{report.matchScore}</span>
-                                <span className='score-pct'>%</span>
+                        <div className="match-score-gauge">
+                            <div className="gauge-container">
+                                <svg className="gauge-ring" viewBox="0 0 100 100">
+                                    <circle className="ring-bg" cx="50" cy="50" r="45" />
+                                    <circle 
+                                        className="ring-fill" 
+                                        cx="50" cy="50" r="45" 
+                                        strokeDasharray={`${(report.matchScore / 100) * 283} 283`}
+                                    />
+                                </svg>
+                                <div className="gauge-text">
+                                    <span className="value">{report.matchScore}</span>
+                                    <span className="pct">%</span>
+                                </div>
                             </div>
+                            <p className="gauge-status">Strong match for this role</p>
                         </div>
                     </div>
 
-                    <div className='sidebar-section'>
+                    <div className="sidebar-section">
                         <p className='sidebar-label'>Skill Gaps</p>
                         <div className='skill-gaps-list'>
-                            {report.skillGaps?.map((gap, i) => (
-                                <div key={i} className={`skill-gap-pill skill-gap--${gap.severity}`}>
-                                    <span className="skill-name">{gap.skill}</span>
-                                    <span className="skill-severity-dot" />
-                                </div>
-                            ))}
+                            {report.skillGaps?.map((gap, i) => {
+                                const colorClass = ['high', 'medium', 'low', 'none'][i % 4];
+                                return (
+                                    <div key={i} className={`skill-gap-card skill-gap-card--${colorClass}`}>
+                                        <span className="gap-name">{gap.skill}</span>
+                                    </div>
+                                )
+                            })}
                         </div>
                     </div>
 
-                    <div className="sidebar-footer">
-                        <button
-                            onClick={() => { getResumePdf(interviewId) }}
-                            className='download-btn'
-                        >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="7 10 12 15 17 10" />
-                                <line x1="12" y1="15" x2="12" y2="3" />
-                            </svg>
-                            Download Report
-                        </button>
-                    </div>
+                    <button onClick={() => getResumePdf(interviewId)} className='download-btn'>
+                        Download Report
+                    </button>
+                    
                 </aside>
             </div>
         </div>

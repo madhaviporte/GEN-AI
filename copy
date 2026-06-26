@@ -1,21 +1,179 @@
 {
   "_id": {
-    "$oid": "6a3d33c843cdab35ee27d3bb"
+    "$oid": "6a3e8f249b9f1db24efc86ec"
   },
-  "matchScore": 0,
-  "technicalQuestions": [],
-  "behavioralQuestions": [],
-  "skillGaps": [],
-  "preparationPlan": [],
+  "matchScore": 92,
+  "technicalQuestions": [
+    {
+      "question": "Additional Technical Topic",
+      "intention": "Assess breadth of knowledge",
+      "answer": "Review core principles related to the job role."
+    },
+    {
+      "question": "Additional Technical Topic",
+      "intention": "Assess breadth of knowledge",
+      "answer": "Review core principles related to the job role."
+    },
+    {
+      "question": "Additional Technical Topic",
+      "intention": "Assess breadth of knowledge",
+      "answer": "Review core principles related to the job role."
+    },
+    {
+      "question": "Additional Technical Topic",
+      "intention": "Assess breadth of knowledge",
+      "answer": "Review core principles related to the job role."
+    },
+    {
+      "question": "Additional Technical Topic",
+      "intention": "Assess breadth of knowledge",
+      "answer": "Review core principles related to the job role."
+    },
+    {
+      "question": "Additional Technical Topic",
+      "intention": "Assess breadth of knowledge",
+      "answer": "Review core principles related to the job role."
+    },
+    {
+      "question": "Additional Technical Topic",
+      "intention": "Assess breadth of knowledge",
+      "answer": "Review core principles related to the job role."
+    },
+    {
+      "question": "Additional Technical Topic",
+      "intention": "Assess breadth of knowledge",
+      "answer": "Review core principles related to the job role."
+    }
+  ],
+  "behavioralQuestions": [
+    {
+      "question": "General Workplace Scenario",
+      "intention": "Assess adaptability and teamwork",
+      "answer": "Reflect on a past situation where you demonstrated core professional competencies."
+    },
+    {
+      "question": "General Workplace Scenario",
+      "intention": "Assess adaptability and teamwork",
+      "answer": "Reflect on a past situation where you demonstrated core professional competencies."
+    },
+    {
+      "question": "General Workplace Scenario",
+      "intention": "Assess adaptability and teamwork",
+      "answer": "Reflect on a past situation where you demonstrated core professional competencies."
+    },
+    {
+      "question": "General Workplace Scenario",
+      "intention": "Assess adaptability and teamwork",
+      "answer": "Reflect on a past situation where you demonstrated core professional competencies."
+    },
+    {
+      "question": "General Workplace Scenario",
+      "intention": "Assess adaptability and teamwork",
+      "answer": "Reflect on a past situation where you demonstrated core professional competencies."
+    }
+  ],
+  "skillGaps": [
+    {
+      "skill": "Advanced Industry Knowledge",
+      "severity": "low"
+    },
+    {
+      "skill": "Advanced Industry Knowledge",
+      "severity": "low"
+    },
+    {
+      "skill": "Advanced Industry Knowledge",
+      "severity": "low"
+    }
+  ],
+  "preparationPlan": [
+    {
+      "day": 1,
+      "focus": "Topic Review Day 1",
+      "tasks": [
+        "Review relevant documentation",
+        "Practice coding/behavioral questions"
+      ],
+      "_id": {
+        "$oid": "6a3e8f249b9f1db24efc86ed"
+      }
+    },
+    {
+      "day": 2,
+      "focus": "Topic Review Day 2",
+      "tasks": [
+        "Review relevant documentation",
+        "Practice coding/behavioral questions"
+      ],
+      "_id": {
+        "$oid": "6a3e8f249b9f1db24efc86ee"
+      }
+    },
+    {
+      "day": 3,
+      "focus": "Topic Review Day 3",
+      "tasks": [
+        "Review relevant documentation",
+        "Practice coding/behavioral questions"
+      ],
+      "_id": {
+        "$oid": "6a3e8f249b9f1db24efc86ef"
+      }
+    },
+    {
+      "day": 4,
+      "focus": "Topic Review Day 4",
+      "tasks": [
+        "Review relevant documentation",
+        "Practice coding/behavioral questions"
+      ],
+      "_id": {
+        "$oid": "6a3e8f249b9f1db24efc86f0"
+      }
+    },
+    {
+      "day": 5,
+      "focus": "Topic Review Day 5",
+      "tasks": [
+        "Review relevant documentation",
+        "Practice coding/behavioral questions"
+      ],
+      "_id": {
+        "$oid": "6a3e8f249b9f1db24efc86f1"
+      }
+    },
+    {
+      "day": 6,
+      "focus": "Topic Review Day 6",
+      "tasks": [
+        "Review relevant documentation",
+        "Practice coding/behavioral questions"
+      ],
+      "_id": {
+        "$oid": "6a3e8f249b9f1db24efc86f2"
+      }
+    },
+    {
+      "day": 7,
+      "focus": "Topic Review Day 7",
+      "tasks": [
+        "Review relevant documentation",
+        "Practice coding/behavioral questions"
+      ],
+      "_id": {
+        "$oid": "6a3e8f249b9f1db24efc86f3"
+      }
+    }
+  ],
   "user": {
-    "$oid": "6a3c0301fc99b404c9f8f592"
+    "$oid": "6a3ac3b77014a7af1adccf3b"
   },
-  "title": "We are looking for a Full Stack Developer to join our engineering team. The candidate should have ex",
+  "title": "Full Stack Developer",
   "createdAt": {
-    "$date": "2026-06-25T13:57:28.581Z"
+    "$date": "2026-06-26T14:39:32.067Z"
   },
   "updatedAt": {
-    "$date": "2026-06-25T13:57:28.581Z"
+    "$date": "2026-06-26T14:39:32.067Z"
   },
   "__v": 0
 }
