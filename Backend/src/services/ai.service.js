@@ -124,6 +124,8 @@ function sanitizeInterviewReport(data, jobDescription = "") {
 }
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
+    console.log(`[AI SERVICE] Starting interview report generation for job description (length: ${jobDescription?.length || 0})`);
+    
     const prompt = `
         As a world-class Technical Recruiter and Career Coach, generate a comprehensive, high-fidelity Interview Preparation Report.
         
@@ -153,13 +155,13 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
         - Ensure field names match EXACTLY: title, matchScore, technicalQuestions, behavioralQuestions, skillGaps, preparationPlan.
     `;
 
-    let retries = 3;
-    let delay = 2000;
+    let retries = 2; // Reduced from 3 to minimize amplification
+    let delay = 3000; // Increased base delay
 
-    while (retries > 0) {
+    while (retries >= 0) {
         try {
             const response = await ai.models.generateContent({
-                model: "gemini-2.0-flash-lite", // Fast and reliable for structured output
+                model: "gemini-2.0-flash-lite", 
                 contents: prompt,
                 config: {
                     responseMimeType: "application/json",
@@ -174,33 +176,31 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
 
             let data;
             try {
-                // Remove markdown if AI accidentally included it
                 const jsonText = rawText.replace(/```json|```/g, "").trim();
                 data = JSON.parse(jsonText);
             } catch (parseError) {
-                console.error("AI JSON Parse Error. Raw text:", rawText);
+                console.error("[AI SERVICE] JSON Parse Error:", parseError.message);
                 throw new Error("Failed to parse AI response as valid JSON");
             }
 
-            // Perform robust sanitization and schema enforcement
             const validatedData = sanitizeInterviewReport(data, jobDescription);
 
-            console.log(`Successfully generated and validated report for: ${validatedData.title}`);
+            console.log(`[AI SERVICE] Successfully generated and validated report: "${validatedData.title}"`);
             return validatedData;
 
         } catch (err) {
             const statusCode = err.status || (err.message && err.message.includes("429") ? 429 : (err.message && err.message.includes("503") ? 503 : 500));
             const isRetryable = statusCode === 429 || statusCode === 503;
             
-            if (isRetryable && retries > 1) {
-                console.warn(`Retryable error (Status: ${statusCode}). Retrying in ${delay}ms... (${retries - 1} left)`);
+            if (isRetryable && retries > 0) {
+                console.warn(`[AI SERVICE] Retryable error (Status: ${statusCode}). Retrying in ${delay}ms... (${retries} left)`);
                 await sleep(delay);
                 retries--;
                 delay *= 2;
                 continue;
             }
 
-            console.error("AI Service Error:", err.message || err);
+            console.error(`[AI SERVICE] Terminal Error (Status: ${statusCode}):`, err.message || err);
             
             // Attach status to error object for the global error handler
             err.status = statusCode;
@@ -208,6 +208,7 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
         }
     }
 }
+
 
 
 

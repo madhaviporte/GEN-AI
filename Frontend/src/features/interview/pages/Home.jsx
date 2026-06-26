@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router'
 
 const Home = () => {
 
-    const { loading, generateReport,reports } = useInterview()
+    const { loading, generateReport, reports, getReports } = useInterview()
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
 
@@ -16,11 +16,23 @@ const Home = () => {
 
     const navigate = useNavigate()
 
+    React.useEffect(() => {
+        getReports()
+    }, [])
+
     const handleGenerateReport = async () => {
+        if (loading) return; // Prevent multiple clicks
+        
         const resumeFile = resumeInputRef.current.files[ 0 ]
+        if (!resumeFile) return;
+
         const data = await generateReport({ jobDescription, selfDescription, resumeFile })
-        navigate(`/interview/${data._id}`)
+        if (data && data._id) {
+            navigate(`/interview/${data._id}`)
+        }
     }
+
+
 
     if (loading) {
         return (
