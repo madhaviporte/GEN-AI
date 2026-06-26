@@ -211,11 +211,6 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     }
 }
 
-
-
-
-
-
 async function generatePdfFromHtml(htmlContent) {
     const browser = await puppeteer.launch()
     const page = await browser.newPage();
