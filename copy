@@ -1,0 +1,21 @@
+{
+  "_id": {
+    "$oid": "6a3d33c843cdab35ee27d3bb"
+  },
+  "matchScore": 0,
+  "technicalQuestions": [],
+  "behavioralQuestions": [],
+  "skillGaps": [],
+  "preparationPlan": [],
+  "user": {
+    "$oid": "6a3c0301fc99b404c9f8f592"
+  },
+  "title": "We are looking for a Full Stack Developer to join our engineering team. The candidate should have ex",
+  "createdAt": {
+    "$date": "2026-06-25T13:57:28.581Z"
+  },
+  "updatedAt": {
+    "$date": "2026-06-25T13:57:28.581Z"
+  },
+  "__v": 0
+}
