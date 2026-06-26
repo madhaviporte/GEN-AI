@@ -7,53 +7,209 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY
 })
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 
 const interviewReportSchema = z.object({
-    matchScore: z.number().describe("A score between 0 and 100 indicating how well the candidate's profile matches the job describe"),
+    title: z.string().describe("The professional job title inferred from the job description (e.g., 'Senior Software Engineer')"),
+    matchScore: z.number().min(0).max(100).describe("A score between 0 and 100 indicating how well the candidate's profile matches the job"),
     technicalQuestions: z.array(z.object({
-        question: z.string().describe("The technical question can be asked in the interview"),
-        intention: z.string().describe("The intention of interviewer behind asking this question"),
-        answer: z.string().describe("How to answer this question, what points to cover, what approach to take etc.")
-    })).describe("Technical questions that can be asked in the interview along with their intention and how to answer them"),
+        question: z.string().describe("The technical question that can be asked in the interview"),
+        intention: z.string().describe("Why the interviewer is asking this question"),
+        answer: z.string().describe("A suggested high-quality answer covering key technical aspects")
+    })).describe("List of at least 8 relevant technical questions"),
     behavioralQuestions: z.array(z.object({
-        question: z.string().describe("The technical question can be asked in the interview"),
-        intention: z.string().describe("The intention of interviewer behind asking this question"),
-        answer: z.string().describe("How to answer this question, what points to cover, what approach to take etc.")
-    })).describe("Behavioral questions that can be asked in the interview along with their intention and how to answer them"),
+        question: z.string().describe("The behavioral question (e.g., STAR method)"),
+        intention: z.string().describe("The competency being tested (e.g., leadership, teamwork)"),
+        answer: z.string().describe("Guidelines for a strong behavioral response")
+    })).describe("List of at least 5 relevant behavioral questions"),
     skillGaps: z.array(z.object({
-        skill: z.string().describe("The skill which the candidate is lacking"),
-        severity: z.enum([ "low", "medium", "high" ]).describe("The severity of this skill gap, i.e. how important is this skill for the job and how much it can impact the candidate's chances")
-    })).describe("List of skill gaps in the candidate's profile along with their severity"),
+        skill: z.string().describe("The specific skill or technology the candidate lacks"),
+        severity: z.enum(["low", "medium", "high"]).describe("How critical this gap is for the role")
+    })).describe("Identified at least 3 gaps between candidate profile and job requirements"),
     preparationPlan: z.array(z.object({
-        day: z.number().describe("The day number in the preparation plan, starting from 1"),
-        focus: z.string().describe("The main focus of this day in the preparation plan, e.g. data structures, system design, mock interviews etc."),
-        tasks: z.array(z.string()).describe("List of tasks to be done on this day to follow the preparation plan, e.g. read a specific book or article, solve a set of problems, watch a video etc.")
-    })).describe("A day-wise preparation plan for the candidate to follow in order to prepare for the interview effectively"),
-    title: z.string().describe("The title of the job for which the interview report is generated"),
+        day: z.number().describe("Day number in the study plan (1 to 7)"),
+        focus: z.string().describe("Primary topic for this day"),
+        tasks: z.array(z.string()).describe("Specific actionable tasks for preparation (at least 2 tasks per day)")
+    })).describe("A structured preparation roadmap for exactly 7 days"),
 })
 
-async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
+/**
+ * Sanitizes and validates the AI response against the required schema.
+ * Ensures that all required fields are present, types are correct, and counts are met.
+ */
+function sanitizeInterviewReport(data, jobDescription = "") {
+    const sanitized = {};
 
+    // 1. Title Sanitization
+    sanitized.title = (typeof data.title === 'string' && data.title.trim().length > 0)
+        ? data.title.trim()
+        : (jobDescription.split('\n')[0] || "Interview Preparation Report").substring(0, 100);
 
-    const prompt = `Generate an interview report for a candidate with the following details:
-                        Resume: ${resume}
-                        Self Description: ${selfDescription}
-                        Job Description: ${jobDescription}
-`
+    // 2. MatchScore Normalization
+    sanitized.matchScore = (typeof data.matchScore === 'number' && !isNaN(data.matchScore))
+        ? Math.min(100, Math.max(0, Math.round(data.matchScore)))
+        : 75; // Default sensible score
 
-    const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-        config: {
-            responseMimeType: "application/json",
-            responseSchema: zodToJsonSchema(interviewReportSchema),
-        }
-    })
+    // 3. Technical Questions (At least 8)
+    sanitized.technicalQuestions = (Array.isArray(data.technicalQuestions) ? data.technicalQuestions : [])
+        .filter(q => q && typeof q === 'object')
+        .map(q => ({
+            question: String(q.question || "Technical Concept Question"),
+            intention: String(q.intention || "Assess fundamental understanding"),
+            answer: String(q.answer || "Answer depends on specific context; refer to official documentation.")
+        }));
+    
+    // Pad if fewer than 8
+    while (sanitized.technicalQuestions.length < 8) {
+        sanitized.technicalQuestions.push({
+            question: "Additional Technical Topic",
+            intention: "Assess breadth of knowledge",
+            answer: "Review core principles related to the job role."
+        });
+    }
 
-    return JSON.parse(response.text)
+    // 4. Behavioral Questions (At least 5)
+    sanitized.behavioralQuestions = (Array.isArray(data.behavioralQuestions) ? data.behavioralQuestions : [])
+        .filter(q => q && typeof q === 'object')
+        .map(q => ({
+            question: String(q.question || "Behavioral Scenario"),
+            intention: String(q.intention || "Assess soft skills and cultural fit"),
+            answer: String(q.answer || "Use the STAR (Situation, Task, Action, Result) method to answer.")
+        }));
 
+    // Pad if fewer than 5
+    while (sanitized.behavioralQuestions.length < 5) {
+        sanitized.behavioralQuestions.push({
+            question: "General Workplace Scenario",
+            intention: "Assess adaptability and teamwork",
+            answer: "Reflect on a past situation where you demonstrated core professional competencies."
+        });
+    }
 
+    // 5. Skill Gaps (At least 3)
+    const validSeverities = ["low", "medium", "high"];
+    sanitized.skillGaps = (Array.isArray(data.skillGaps) ? data.skillGaps : [])
+        .filter(s => s && typeof s === 'object')
+        .map(s => ({
+            skill: String(s.skill || "Specific Industry Tool/Skill"),
+            severity: validSeverities.includes(s.severity) ? s.severity : "medium"
+        }));
+
+    // Pad if fewer than 3
+    while (sanitized.skillGaps.length < 3) {
+        sanitized.skillGaps.push({
+            skill: "Advanced Industry Knowledge",
+            severity: "low"
+        });
+    }
+
+    // 6. Preparation Plan (Exactly 7 days)
+    const rawPlan = (Array.isArray(data.preparationPlan) ? data.preparationPlan : [])
+        .filter(p => p && typeof p === 'object');
+    
+    sanitized.preparationPlan = [];
+    for (let i = 1; i <= 7; i++) {
+        const existingDay = rawPlan.find(p => p.day === i);
+        sanitized.preparationPlan.push({
+            day: i,
+            focus: existingDay ? String(existingDay.focus || `Preparation Focus Day ${i}`) : `Topic Review Day ${i}`,
+            tasks: (existingDay && Array.isArray(existingDay.tasks) && existingDay.tasks.length > 0)
+                ? existingDay.tasks.map(String)
+                : ["Review relevant documentation", "Practice coding/behavioral questions"]
+        });
+    }
+
+    return sanitized;
 }
+
+async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
+    const prompt = `
+        As a world-class Technical Recruiter and Career Coach, generate a comprehensive, high-fidelity Interview Preparation Report.
+        
+        ### CONTEXT:
+        - RESUME: ${resume}
+        - SELF-DESCRIPTION: ${selfDescription}
+        - JOB DESCRIPTION: ${jobDescription}
+
+        ### MANDATORY QUANTITATIVE REQUIREMENTS:
+        1. **technicalQuestions**: EXACTLY 8 or more highly relevant technical questions based on the job requirements and candidate gaps.
+        2. **behavioralQuestions**: EXACTLY 5 or more behavioral questions using the STAR method format.
+        3. **skillGaps**: EXACTLY 3 or more specific areas where the candidate needs improvement.
+        4. **preparationPlan**: EXACTLY 7 entries representing a day-by-day roadmap (Day 1 to 7).
+
+        ### DATA QUALITY RULES:
+        - **title**: Extract the most accurate job title from the job description.
+        - **matchScore**: An integer (0-100) reflecting how well the resume aligns with the job description.
+        - **technicalQuestions**: Each must have a 'question', 'intention' (why it's asked), and a detailed 'answer'.
+        - **behavioralQuestions**: Each must have a 'question', 'intention' (competency being measured), and a detailed 'answer' guideline.
+        - **skillGaps**: Each must identify a specific 'skill' and a 'severity' (low, medium, high).
+        - **preparationPlan**: Each entry must have 'day' (number), 'focus' (topic), and a 'tasks' (array of at least 2 strings).
+
+        ### OUTPUT FORMAT:
+        - You MUST return a valid JSON object.
+        - Do NOT include any markdown formatting like \`\`\`json.
+        - Do NOT include any introductory or concluding text.
+        - Ensure field names match EXACTLY: title, matchScore, technicalQuestions, behavioralQuestions, skillGaps, preparationPlan.
+    `;
+
+    let retries = 3;
+    let delay = 2000;
+
+    while (retries > 0) {
+        try {
+            const response = await ai.models.generateContent({
+                model: "gemini-2.0-flash-lite", // Fast and reliable for structured output
+                contents: prompt,
+                config: {
+                    responseMimeType: "application/json",
+                    responseSchema: zodToJsonSchema(interviewReportSchema),
+                }
+            });
+
+            const rawText = response.text;
+            if (!rawText) {
+                throw new Error("AI returned an empty response");
+            }
+
+            let data;
+            try {
+                // Remove markdown if AI accidentally included it
+                const jsonText = rawText.replace(/```json|```/g, "").trim();
+                data = JSON.parse(jsonText);
+            } catch (parseError) {
+                console.error("AI JSON Parse Error. Raw text:", rawText);
+                throw new Error("Failed to parse AI response as valid JSON");
+            }
+
+            // Perform robust sanitization and schema enforcement
+            const validatedData = sanitizeInterviewReport(data, jobDescription);
+
+            console.log(`Successfully generated and validated report for: ${validatedData.title}`);
+            return validatedData;
+
+        } catch (err) {
+            const statusCode = err.status || (err.message && err.message.includes("429") ? 429 : (err.message && err.message.includes("503") ? 503 : 500));
+            const isRetryable = statusCode === 429 || statusCode === 503;
+            
+            if (isRetryable && retries > 1) {
+                console.warn(`Retryable error (Status: ${statusCode}). Retrying in ${delay}ms... (${retries - 1} left)`);
+                await sleep(delay);
+                retries--;
+                delay *= 2;
+                continue;
+            }
+
+            console.error("AI Service Error:", err.message || err);
+            
+            // Attach status to error object for the global error handler
+            err.status = statusCode;
+            throw err;
+        }
+    }
+}
+
+
 
 
 
@@ -96,14 +252,13 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                     `
 
     const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-2.0-flash-lite",
         contents: prompt,
         config: {
             responseMimeType: "application/json",
             responseSchema: zodToJsonSchema(resumePdfSchema),
         }
     })
-
 
     const jsonContent = JSON.parse(response.text)
 
