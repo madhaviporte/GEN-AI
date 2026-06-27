@@ -11,13 +11,17 @@ $accent-green:   #22c55e;
 $accent-yellow:  #eab308;
 $accent-orange:  #f97316;
 
-$font-stack:     'Inter', system-ui, -apple-system, sans-serif;
+$font-stack:     'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
 // ── Global Customizations ──────────────────────────────────────────────────
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
 }
 
 *::-webkit-scrollbar {
