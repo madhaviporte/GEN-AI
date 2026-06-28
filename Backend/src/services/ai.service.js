@@ -6,7 +6,7 @@ const puppeteer = require("puppeteer")
 const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY
 })
-console.log("KEY:", process.env.GOOGLE_GENAI_API_KEY.substring(0, 15));
+// console.log("KEY:", process.env.GOOGLE_GENAI_API_KEY.substring(0, 15));
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 

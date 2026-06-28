@@ -1,4 +1,4 @@
-require("dotenv").config();
+// require("dotenv").config();
 const express = require("express")
 const cookieParser = require("cookie-parser")
 const cors = require("cors")
@@ -44,4 +44,4 @@ app.use((err, req, res, next) => {
     });
 });
 
-module.exports = app
+module.exports = app

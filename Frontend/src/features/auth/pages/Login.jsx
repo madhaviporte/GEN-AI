@@ -10,6 +10,8 @@ const Login = () => {
 
     const [ email, setEmail ] = useState("")
     const [ password, setPassword ] = useState("")
+    const [ emailReadOnly, setEmailReadOnly ] = useState(true)
+    const [ passwordReadOnly, setPasswordReadOnly ] = useState(true)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -62,14 +64,20 @@ const Login = () => {
                                 <label htmlFor="email">Email Address</label>
                                 <input
                                     className="auth-input"
+                                    value={email}
                                     onChange={(e) => { setEmail(e.target.value) }}
+                                    onFocus={() => setEmailReadOnly(false)}
+                                    readOnly={emailReadOnly}
                                     type="email" id="email" name='email' placeholder='john@example.com' />
                             </div>
                             <div className="input-group">
                                 <label htmlFor="password">Password</label>
                                 <input
                                     className="auth-input"
+                                    value={password}
                                     onChange={(e) => { setPassword(e.target.value) }}
+                                    onFocus={() => setPasswordReadOnly(false)}
+                                    readOnly={passwordReadOnly}
                                     type="password" id="password" name='password' placeholder='••••••••' />
                             </div>
                             <button className='auth-btn' >Sign In</button>
