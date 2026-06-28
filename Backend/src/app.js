@@ -6,10 +6,28 @@ const cors = require("cors")
 const app = express()
 
 
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    "https://gen-ai-1-frontend-g7vo.onrender.com",
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:3000"
+].filter(Boolean);
+
+
+
+app.set("trust proxy", 1);
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin: "https://gen-ai-1-frontend-g7vo.onrender.com",
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }))
 

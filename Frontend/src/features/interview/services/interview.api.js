@@ -1,8 +1,10 @@
 import axios from "axios";
 
+// VITE_API_URL is set to http://localhost:3000 in .env for local development.
+// In production (Render), the fallback production URL is used.
 const api = axios.create({
-    baseURL: "https://gen-ai-halz.onrender.com",
-    withCredentials: true,
+    baseURL: import.meta.env.VITE_API_URL || "https://gen-ai-halz.onrender.com",
+    withCredentials: true,  // Required: sends HttpOnly cookies with every request
 })
 
 

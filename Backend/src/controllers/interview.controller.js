@@ -9,20 +9,15 @@ const interviewReportModel = require("../models/interviewReport.model")
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
 async function generateInterViewReportController(req, res, next) {
-    console.log(`[CONTROLLER] Received request to generate interview report for user ${req.user.id}`);
     try {
         const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
         const { selfDescription, jobDescription } = req.body
 
-        console.log(`[CONTROLLER] PDF parsed successfully for user ${req.user.id}. Calling AI Service...`);
-        
         const interViewReportByAi = await generateInterviewReport({
             resume: resumeContent.text,
             selfDescription,
             jobDescription
         })
-
-        console.log(`[CONTROLLER] AI generation complete for user ${req.user.id}. Saving to database...`);
 
         const interviewReport = await interviewReportModel.create({
             user: req.user.id,
@@ -31,8 +26,6 @@ async function generateInterViewReportController(req, res, next) {
             jobDescription,
             ...interViewReportByAi
         })
-
-        console.log(`[CONTROLLER] Interview report saved with ID: ${interviewReport._id}`);
 
         res.status(201).json({
             message: "Interview report generated successfully.",
