@@ -47,7 +47,11 @@ async function registerUserController(req, res, next) {
             { expiresIn: "1d" }
         )
 
-        res.cookie("token", token)
+        res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+});
 
 
         res.status(201).json({
@@ -96,7 +100,12 @@ async function loginUserController(req, res, next) {
             { expiresIn: "1d" }
         )
 
-        res.cookie("token", token)
+       res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+});
+
         res.status(200).json({
             message: "User loggedIn successfully.",
             user: {
@@ -164,4 +173,4 @@ module.exports = {
     loginUserController,
     logoutUserController,
     getMeController
-}
+}
