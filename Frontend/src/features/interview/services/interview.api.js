@@ -6,7 +6,8 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || "https://gen-ai-halz.onrender.com",
     withCredentials: true,  // Required: sends HttpOnly cookies with every request
 })
-
+console.log("API URL:", import.meta.env.VITE_API_URL);
+console.log("Base URL:", api.defaults.baseURL);
 
 /**
  * @description Service to generate interview report based on user self description, resume and job description.
