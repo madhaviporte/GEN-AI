@@ -25,8 +25,9 @@ const Home = () => {
     const handleGenerateReport = async () => {
         if (loading) return; // Prevent multiple clicks
         
-        const resumeFile = resumeInputRef.current.files[ 0 ]
-        if (!resumeFile) return;
+        const resumeFile = resumeInputRef.current?.files?.[ 0 ]
+        // Validate that either a resume is uploaded OR a self description is provided
+        if (!resumeFile && !selfDescription.trim()) return;
 
         const data = await generateReport({ jobDescription, selfDescription, resumeFile })
         if (data && data._id) {
